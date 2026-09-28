@@ -28,16 +28,16 @@ Monorepo: React (Vite) client + Express/Prisma server, backed by Neon PostgreSQL
 ```
 PORT=5000
 NODE_ENV=development
-DATABASE_URL="postgresql://user:pass@ep-xxx-pooler.region.aws.neon.tech/neondb?sslmode=require&pgbouncer=true&connect_timeout=15"
-DIRECT_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require"
-JWT_SECRET=a_very_long_random_string_at_least_64_chars
+DATABASE_URL=
+DIRECT_URL=
+JWT_SECRET=
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
 PUBLIC_URL=http://localhost:5173
 STORAGE_DRIVER=local
 UPLOAD_DIR=./uploads
-ADMIN_EMAIL=admin@uits.edu.bd
-ADMIN_PASSWORD=Admin@1234
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
 
 # SMTP (optional — emails are logged to console if not set)
 SMTP_HOST=smtp.gmail.com
