@@ -13,7 +13,8 @@ const PERKS = [
   { Icon: Briefcase,     text: "Career Opportunities" },
   { Icon: CalendarCheck, text: "Exclusive Event Access" },
 ];
-const EMPTY = { name: "", reg: "", email: "", phone: "", batch: "", dept: "", address: "", about: "" };
+const BLOOD_GROUPS = ["A+","A-","B+","B-","AB+","AB-","O+","O-"];
+const EMPTY = { name: "", reg: "", email: "", phone: "", batch: "", dept: "", bloodGroup: "", address: "", about: "" };
 
 export default function Register() {
   const [form, setForm] = useState(EMPTY);
@@ -53,6 +54,7 @@ export default function Register() {
         faculty: dept?.faculty || "",
         address: form.address,
         about: form.about,
+        bloodGroup: form.bloodGroup || null,
       };
       fd.append("data", JSON.stringify(payload));
       if (file) fd.append("photo", file);
@@ -99,6 +101,12 @@ export default function Register() {
                 {DEPARTMENTS_CONFIG.map((d) => (
                   <option key={d.full} value={d.full}>{d.full} ({d.code})</option>
                 ))}
+              </select>
+            </FormField>
+            <FormField label="Blood Group">
+              <select className={`control${form.bloodGroup ? "" : " is-empty"}`} value={form.bloodGroup} onChange={set("bloodGroup")}>
+                <option value="">Select blood group</option>
+                {BLOOD_GROUPS.map((b) => <option key={b} value={b}>{b}</option>)}
               </select>
             </FormField>
             <FormField label="Current Address" required><textarea className="control" required placeholder="Enter your current address" value={form.address} onChange={set("address")} /></FormField>

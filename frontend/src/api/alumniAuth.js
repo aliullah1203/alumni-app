@@ -10,5 +10,10 @@ export const alumniAuthApi = {
   validateResetToken: (token) => api.get(`/alumni-auth/reset?token=${encodeURIComponent(token)}`),
   resetPassword:      (body)  => api.post("/alumni-auth/reset-password", body),
   updateProfile:      (body)  => api.putForm("/alumni-auth/profile", body),
+  updateEducation:    (body)  => api.put("/alumni-auth/education", body),
+  updateExperience:   (body)  => api.put("/alumni-auth/experience", body),
   changePassword:     (body)  => api.put("/alumni-auth/password", body),
+  listGallery:        ()      => api.get("/alumni-auth/gallery"),
+  uploadGallery:      (fd)    => api.postForm("/alumni-auth/gallery", fd),
+  deleteGallery:      (id)    => api.delete(`/alumni-auth/gallery/${id}`),
 };

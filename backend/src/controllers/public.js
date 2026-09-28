@@ -87,6 +87,7 @@ const registerSchema = z.object({
   faculty: z.string().min(2).max(100).trim(),
   address: z.string().min(5).max(500).trim(),
   about: z.string().max(1000).optional().default(""),
+  bloodGroup: z.enum(["A+","A-","B+","B-","AB+","AB-","O+","O-"]).optional().nullable(),
 });
 
 exports.registerAlumni = async (req, res) => {
@@ -165,6 +166,7 @@ const ALUMNI_PUBLIC_SELECT = {
   department: true,
   faculty: true,
   about: true,
+  bloodGroup: true,
   photoUrl: true,
   socialLinks: true,
   showContact: true,
@@ -174,6 +176,7 @@ const ALUMNI_PUBLIC_SELECT = {
   address: true,
   education: { orderBy: { startYear: "asc" } },
   experience: { orderBy: { startYear: "asc" } },
+  gallery: { orderBy: { createdAt: "desc" } },
 };
 
 exports.getAlumni = async (req, res) => {
@@ -182,7 +185,11 @@ exports.getAlumni = async (req, res) => {
     select: ALUMNI_PUBLIC_SELECT,
   });
   if (!alumni) return fail(res, "Alumni not found", 404);
-  const result = { ...alumni, photoUrl: getFileUrl(alumni.photoUrl) };
+  const result = {
+    ...alumni,
+    photoUrl: getFileUrl(alumni.photoUrl),
+    gallery: alumni.gallery.map((g) => ({ ...g, imageUrl: getFileUrl(g.imageUrl) })),
+  };
   if (!alumni.showContact) {
     delete result.email;
     delete result.phone;

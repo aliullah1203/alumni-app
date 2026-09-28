@@ -55,6 +55,23 @@ exports.getMe = async (req, res) => {
   ok(res, user);
 };
 
+const profileSchema = z.object({
+  name:  z.string().min(2).max(100).trim(),
+  email: z.string().email().toLowerCase().trim(),
+}).strict();
+
+exports.updateProfile = async (req, res) => {
+  const { name, email } = profileSchema.parse(req.body);
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing && existing.id !== req.user.id) return fail(res, "Email already in use", 409);
+  const user = await prisma.user.update({
+    where: { id: req.user.id },
+    data: { name, email },
+    select: { id: true, name: true, email: true, role: true, mustChangePassword: true },
+  });
+  ok(res, user, "Profile updated");
+};
+
 const changePwSchema = z.object({
   currentPassword: z.string().min(1),
   newPassword: z.string().min(8).regex(/[A-Z]/, "Must contain an uppercase letter").regex(/[0-9]/, "Must contain a number"),

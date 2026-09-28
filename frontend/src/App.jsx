@@ -12,6 +12,7 @@ import PdfView from "./pages/PdfView";
 import Verify from "./pages/Verify";
 import Login from "./pages/admin/Login";
 import ChangePassword from "./pages/admin/ChangePassword";
+import AdminProfile from "./pages/admin/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminContent from "./pages/admin/Content";
 import AdminAlumni from "./pages/admin/Alumni";
@@ -24,6 +25,7 @@ import AlumniLogin from "./pages/alumni/Login";
 import SetupPassword from "./pages/alumni/SetupPassword";
 import ForgotPassword from "./pages/alumni/ForgotPassword";
 import ResetPassword from "./pages/alumni/ResetPassword";
+import AlumniSettings from "./pages/alumni/Settings";
 
 function ScrollManager() {
   const { pathname, hash } = useLocation();
@@ -55,6 +57,7 @@ export default function App() {
         <Route path="/alumni/setup-password" element={<SetupPassword />} />
         <Route path="/alumni/forgot-password" element={<ForgotPassword />} />
         <Route path="/alumni/reset-password" element={<ResetPassword />} />
+        <Route path="/alumni/settings" element={<AlumniSettings />} />
         <Route path="/alumni/:id" element={<Profile />} />
         <Route path="/alumni/:id/pdf" element={<PdfView />} />
         <Route path="/verify/:id" element={<Verify />} />
@@ -63,6 +66,7 @@ export default function App() {
         {/* Admin — protected */}
         <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
         <Route path="/admin/change-password" element={<AdminGuard><ChangePassword /></AdminGuard>} />
+        <Route path="/admin/profile" element={<AdminGuard><AdminProfile /></AdminGuard>} />
         <Route path="/admin/alumni" element={<AdminGuard><AdminAlumni /></AdminGuard>} />
         <Route path="/admin/content" element={<AdminGuard><AdminContent /></AdminGuard>} />
         <Route path="/admin/gallery" element={<AdminGuard><AdminGallery /></AdminGuard>} />

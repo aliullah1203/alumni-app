@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Users, FileEdit, Image, Bell, UserCog, Settings, LogOut, Menu, ChevronDown } from "lucide-react";
+import { LayoutDashboard, Users, FileEdit, Image, Bell, UserCog, Settings, LogOut, Menu, ChevronDown, CircleUser } from "lucide-react";
+import { Link } from "react-router-dom";
 import adminPhoto from "../assets/admin.png";
 import { LogoMark } from "./Logo";
 import { SITE } from "../data/site.js";
@@ -14,6 +15,7 @@ const MENU = [
   { label: "Notices",          to: "/admin/notices",  Icon: Bell },
   { label: "Users",            to: "/admin/users",    Icon: UserCog },
   { label: "Settings",         to: "/admin/settings", Icon: Settings },
+  { label: "My Profile",       to: "/admin/profile",  Icon: CircleUser },
 ];
 
 export default function AdminLayout({ children }) {
@@ -47,12 +49,12 @@ export default function AdminLayout({ children }) {
       <div className="admin__body">
         <div className="admin__topbar">
           <button className="admin__burger" aria-label="Toggle sidebar" onClick={() => setOpen(!open)}><Menu size={22} /></button>
-          <div className="admin__user">
+          <Link to="/admin/profile" className="admin__user">
             <span className="admin__divider" />
             <img src={adminPhoto} alt="" />
             <span>{user?.name || "Admin"}</span>
             <ChevronDown size={14} />
-          </div>
+          </Link>
         </div>
         <div className="admin__content">{children}</div>
       </div>

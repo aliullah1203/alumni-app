@@ -113,6 +113,7 @@ const alumniBodySchema = z.object({
   faculty: z.string().min(2).max(100).trim(),
   address: z.string().min(5).max(500).trim(),
   about: z.string().max(1000).optional().default(""),
+  bloodGroup: z.enum(["A+","A-","B+","B-","AB+","AB-","O+","O-"]).optional().nullable(),
   showContact: z.coerce.boolean().optional().default(false),
   status: z.enum(["PENDING", "APPROVED", "REJECTED"]).optional(),
 }).strict();

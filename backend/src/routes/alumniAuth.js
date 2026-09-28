@@ -23,7 +23,12 @@ router.get("/reset", wrap(ctrl.validateResetToken));
 router.post("/reset-password", wrap(ctrl.resetPassword));
 
 // Profile self-service (authenticated)
-router.put("/profile", requireAlumniAuth, upload.single("photo"), verifyMagicBytes, wrap(ctrl.updateProfile));
-router.put("/password", requireAlumniAuth, wrap(ctrl.changePassword));
+router.put("/profile",    requireAlumniAuth, upload.single("photo"), verifyMagicBytes, wrap(ctrl.updateProfile));
+router.put("/education",  requireAlumniAuth, wrap(ctrl.updateEducation));
+router.put("/experience", requireAlumniAuth, wrap(ctrl.updateExperience));
+router.put("/password",   requireAlumniAuth, wrap(ctrl.changePassword));
+router.get("/gallery",    requireAlumniAuth, wrap(ctrl.listGallery));
+router.post("/gallery",   requireAlumniAuth, upload.single("image"), verifyMagicBytes, wrap(ctrl.uploadGallery));
+router.delete("/gallery/:id", requireAlumniAuth, wrap(ctrl.deleteGallery));
 
 module.exports = router;

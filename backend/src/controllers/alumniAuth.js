@@ -138,7 +138,7 @@ exports.me = async (req, res) => {
     select: {
       id: true, name: true, registrationNo: true, email: true, phone: true,
       batch: true, department: true, faculty: true, address: true, about: true,
-      photoUrl: true, showContact: true, socialLinks: true, status: true,
+      bloodGroup: true, photoUrl: true, showContact: true, socialLinks: true, status: true,
     },
   });
 
@@ -225,6 +225,7 @@ const profileSchema = z.object({
   about: z.string().max(1000).optional(),
   phone: z.string().min(7).max(20).trim().optional(),
   address: z.string().min(5).max(500).trim().optional(),
+  bloodGroup: z.enum(["A+","A-","B+","B-","AB+","AB-","O+","O-"]).optional().nullable(),
   showContact: z.coerce.boolean().optional(),
   socialLinks: z.record(z.string().max(300)).optional(),
 }).strict();
@@ -251,11 +252,89 @@ exports.updateProfile = async (req, res) => {
     select: {
       id: true, name: true, registrationNo: true, email: true, phone: true,
       batch: true, department: true, faculty: true, address: true, about: true,
-      photoUrl: true, showContact: true, socialLinks: true,
+      bloodGroup: true, photoUrl: true, showContact: true, socialLinks: true,
     },
   });
 
   ok(res, { ...alumni, photoUrl: getFileUrl(alumni.photoUrl) });
+};
+
+// PUT /api/alumni-auth/education — replace all education entries
+const yearField = z.preprocess(
+  (v) => (v === "" || v == null ? null : Number(v)),
+  z.number().int().min(1950).max(2100).nullable().optional()
+);
+
+const educationItemSchema = z.object({
+  school:      z.string().min(1).max(200).trim(),
+  degree:      z.string().max(100).trim().optional().default(""),
+  field:       z.string().max(100).trim().optional().default(""),
+  startYear:   yearField,
+  endYear:     yearField,
+  description: z.string().max(500).trim().optional().default(""),
+});
+
+exports.updateEducation = async (req, res) => {
+  const entries = z.array(educationItemSchema).max(20).parse(req.body);
+  const alumniId = req.alumniUser.alumniId;
+  await prisma.$transaction([
+    prisma.education.deleteMany({ where: { alumniId } }),
+    ...entries.map((e) => prisma.education.create({ data: { ...e, alumniId } })),
+  ]);
+  const education = await prisma.education.findMany({ where: { alumniId }, orderBy: { startYear: "asc" } });
+  ok(res, education);
+};
+
+// PUT /api/alumni-auth/experience — replace all experience entries
+const experienceItemSchema = z.object({
+  company:     z.string().min(1).max(200).trim(),
+  title:       z.string().min(1).max(200).trim(),
+  startYear:   yearField,
+  endYear:     yearField,
+  current:     z.coerce.boolean().optional().default(false),
+  description: z.string().max(500).trim().optional().default(""),
+});
+
+exports.updateExperience = async (req, res) => {
+  const entries = z.array(experienceItemSchema).max(20).parse(req.body);
+  const alumniId = req.alumniUser.alumniId;
+  await prisma.$transaction([
+    prisma.experience.deleteMany({ where: { alumniId } }),
+    ...entries.map((e) => prisma.experience.create({ data: { ...e, alumniId } })),
+  ]);
+  const experience = await prisma.experience.findMany({ where: { alumniId }, orderBy: { startYear: "asc" } });
+  ok(res, experience);
+};
+
+// GET /api/alumni-auth/gallery — list own gallery
+exports.listGallery = async (req, res) => {
+  const items = await prisma.alumniGallery.findMany({
+    where: { alumniId: req.alumniUser.alumniId },
+    orderBy: { createdAt: "desc" },
+  });
+  ok(res, items.map((i) => ({ ...i, imageUrl: getFileUrl(i.imageUrl) })));
+};
+
+// POST /api/alumni-auth/gallery — upload a photo
+exports.uploadGallery = async (req, res) => {
+  if (!req.file) return fail(res, "Image file required", 400);
+  const caption = (req.body.caption || "").trim().slice(0, 200);
+  const imageUrl = await saveFile(req.file);
+  const item = await prisma.alumniGallery.create({
+    data: { alumniId: req.alumniUser.alumniId, imageUrl, caption: caption || null },
+  });
+  ok(res, { ...item, imageUrl: getFileUrl(item.imageUrl) }, "Photo uploaded", undefined, 201);
+};
+
+// DELETE /api/alumni-auth/gallery/:id — delete own photo
+exports.deleteGallery = async (req, res) => {
+  const item = await prisma.alumniGallery.findFirst({
+    where: { id: req.params.id, alumniId: req.alumniUser.alumniId },
+  });
+  if (!item) return fail(res, "Not found", 404);
+  try { await deleteFile(item.imageUrl); } catch {}
+  await prisma.alumniGallery.delete({ where: { id: item.id } });
+  ok(res, null, "Deleted");
 };
 
 // PUT /api/alumni-auth/password — change password (requires alumniAuth)

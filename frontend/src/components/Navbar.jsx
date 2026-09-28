@@ -45,6 +45,7 @@ export default function Navbar({ active, showRegister = true, showLogin = true }
           ) : alumniUser ? (
             <>
               <NavLink to={`/alumni/${alumniUser.registrationNo}`} className="navbar__login">My Profile</NavLink>
+              <NavLink to="/alumni/settings" className="navbar__login">Settings</NavLink>
               <Button size="sm" variant="outline" onClick={handleAlumniLogout}>Logout</Button>
             </>
           ) : (
