@@ -1,6 +1,6 @@
-// In dev: VITE_API_URL is unset → BASE="/api" → Vite proxy forwards to localhost:5000
-// In production: VITE_API_URL="https://alumni-app-qaxy.onrender.com" → BASE includes origin
-const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api";
+// In dev:  Vite proxy rewrites /api/* → http://localhost:5000/api/*
+// In prod: Cloudflare Worker (src/worker.js) proxies /api/* → Render backend
+const BASE = "/api";
 
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
