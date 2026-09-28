@@ -4,8 +4,8 @@ Monorepo: React (Vite) client + Express/Prisma server, backed by Neon PostgreSQL
 
 ```
 /
-├── client/   React app (Vite + React Router)
-├── server/   Express API (Prisma ORM, JWT auth, file upload, PDF)
+├── frontend/   React app (Vite + React Router)
+├── backend/    Express API (Prisma ORM, JWT auth, file upload, PDF)
 └── package.json  root scripts (concurrently)
 ```
 
@@ -24,7 +24,7 @@ Monorepo: React (Vite) client + Express/Prisma server, backed by Neon PostgreSQL
 
 ## 2. Environment Variables
 
-### server/.env (development)
+### backend/.env (development)
 ```
 PORT=5000
 NODE_ENV=development
@@ -38,22 +38,27 @@ STORAGE_DRIVER=local
 UPLOAD_DIR=./uploads
 ADMIN_EMAIL=admin@uits.edu.bd
 ADMIN_PASSWORD=Admin@1234
+
+# SMTP (optional — emails are logged to console if not set)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@gmail.com
+SMTP_PASS=your-app-password
+FROM_EMAIL=your@gmail.com
 ```
 
-### server/.env.test (test suite)
+### backend/.env.test (test suite)
 Same as above but pointing to the **test** Neon branch's pooled + direct URLs.
 
-See `server/.env.example` for full variable reference.
+See `backend/.env.example` for full variable reference.
 
 ---
 
 ## 3. Install & Bootstrap
 
 ```bash
-# Install all dependencies
-npm install                 # root (concurrently)
-npm install --prefix client
-npm install --prefix server
+# Install all dependencies (root + frontend + backend)
+npm run install:all
 
 # Generate Prisma client
 cd backend && npx prisma generate
@@ -75,7 +80,7 @@ node prisma/seed.js --reset
 ## 4. Run in Development
 
 ```bash
-# From project root — starts both client (port 5173) and server (port 5000)
+# From project root — starts both frontend (port 5173) and backend (port 5000)
 npm run dev
 ```
 
@@ -86,11 +91,11 @@ Vite proxies `/api` → `http://localhost:5000`, so no CORS issues in dev.
 ## 5. Build & Deploy
 
 ```bash
-npm run build       # builds client → client/dist
-npm run start       # starts server (production)
+npm run build       # builds frontend → frontend/dist
+npm run start       # starts backend (production)
 ```
 
-Point your web server / platform at `client/dist` for the SPA and `server/` for the API.
+Point your web server / platform at `frontend/dist` for the SPA and `backend/` for the API.
 
 ---
 
@@ -106,6 +111,7 @@ Point your web server / platform at `client/dist` for the SPA and `server/` for 
 | GET | /api/notices?limit= | Published notices |
 | GET | /api/gallery | Gallery items |
 | GET | /api/meta/filters | Distinct batches & departments (approved) |
+| POST | /api/contact | Contact form submission (rate-limited 5/15min) |
 | POST | /api/alumni/register | Register (multipart, photo ≤2MB jpg/png/webp) |
 | GET | /api/alumni | Approved alumni list — `q, batch, department, page, limit` |
 | GET | /api/alumni/:registrationNo | Single approved alumni profile |
@@ -159,8 +165,8 @@ Point your web server / platform at `client/dist` for the SPA and `server/` for 
 ## 7. Running Tests
 
 ```bash
-# Configure server/.env.test to point to the TEST Neon branch
-cd server
+# Configure backend/.env.test to point to the TEST Neon branch
+cd backend
 npm test
 ```
 
@@ -175,22 +181,21 @@ Tests cover: login, register (valid/invalid/duplicate), approval flow, directory
 - [ ] `JWT_SECRET` is a cryptographically random 64+ char string (not the example value)
 - [ ] `CLIENT_URL` set to exact production domain (CORS whitelist)
 - [ ] `PUBLIC_URL` set to production domain (used in QR codes)
-- [ ] `STORAGE_DRIVER=cloudinary` (or s3); install cloudinary npm package and fill in credentials (see `server/src/services/storage.js`)
+- [ ] `STORAGE_DRIVER=cloudinary` (or s3); install cloudinary npm package and fill in credentials (see `backend/src/services/storage.js`)
 - [ ] Neon backups enabled (point-in-time restore)
 - [ ] `prisma migrate deploy` (not `migrate dev`) in CI/CD
 - [ ] Rate limits reviewed for production traffic
-- [ ] `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` configured so approval emails actually deliver
-- [ ] Neon compute auto-suspend: first query after idle may be slow; retry logic in `server/src/config/prisma.js` handles this
+- [ ] `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, `FROM_EMAIL` configured so approval and contact emails actually deliver
+- [ ] `ADMIN_EMAIL` set to the inbox that receives contact form submissions
+- [ ] Neon compute auto-suspend: first query after idle may be slow; retry logic in `backend/src/config/prisma.js` handles this
 
 ---
 
-## 9. Unfinished Items / Assumptions
+## 9. Known Limitations
 
-- **Email delivery in production** — configure `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` in env; without these, emails are logged to the console (useful for local dev).
-- **Gallery admin UI** in the client shows a simple grid; advanced reordering not implemented.
-- **Cloudinary / S3 driver** — interface is stubbed in `server/src/services/storage.js`; install `cloudinary` npm package and uncomment the driver code.
-- **About / Gallery / Notice / Contact sections on the homepage** — the navbar hash links exist but the page only scrolls to the `#notice` section. Full sections need content management wiring.
-- **Social links** on the profile are static (not stored per alumni yet).
-- **Gallery tab on profile** — not wired to gallery API (no per-alumni gallery model).
+- **Cloudinary / S3 driver** — interface is stubbed in `backend/src/services/storage.js`; install `cloudinary` npm package and uncomment the driver code.
+- **Contact messages are not stored** — form submissions are emailed to `ADMIN_EMAIL` only; no database inbox or admin UI for them.
+- **Social links** on alumni profiles are not editable by the alumni (stored but not exposed in the profile update form).
+- **Gallery tab on alumni profile** — not wired to a per-alumni gallery model.
 - **Two-factor authentication** — not implemented.
 - **`prisma migrate dev`** requires a direct connection (use `DIRECT_URL`). Ensure the Neon dev branch endpoint is not suspended when running migrations.
