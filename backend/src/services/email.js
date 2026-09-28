@@ -74,4 +74,24 @@ function resetEmailHtml(name, resetUrl) {
 </body></html>`;
 }
 
-module.exports = { sendEmail, setupEmailHtml, resetEmailHtml };
+function contactEmailHtml({ name, email, subject, message }) {
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family:Arial,sans-serif;line-height:1.6;color:#333;max-width:600px;margin:0 auto;padding:20px">
+  <div style="background:#1e3a5f;padding:24px;text-align:center;border-radius:8px 8px 0 0">
+    <h1 style="color:#fff;margin:0;font-size:20px">UITS Alumni — New Contact Message</h1>
+  </div>
+  <div style="background:#fff;border:1px solid #e0e0e0;border-top:none;padding:32px;border-radius:0 0 8px 8px">
+    <table style="width:100%;border-collapse:collapse;font-size:14px">
+      <tr><td style="padding:8px 0;color:#666;width:90px">From</td><td style="padding:8px 0"><strong>${name}</strong> &lt;${email}&gt;</td></tr>
+      <tr><td style="padding:8px 0;color:#666">Subject</td><td style="padding:8px 0"><strong>${subject}</strong></td></tr>
+    </table>
+    <hr style="border:none;border-top:1px solid #e0e0e0;margin:18px 0">
+    <p style="white-space:pre-wrap;font-size:15px">${message}</p>
+    <hr style="border:none;border-top:1px solid #e0e0e0;margin:24px 0">
+    <p style="color:#999;font-size:12px;text-align:center">UITS Alumni Association &middot; Baridhara, Dhaka</p>
+  </div>
+</body></html>`;
+}
+
+module.exports = { sendEmail, setupEmailHtml, resetEmailHtml, contactEmailHtml };

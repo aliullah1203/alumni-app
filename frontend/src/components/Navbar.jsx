@@ -10,9 +10,9 @@ const LINKS = [
   { label: "Home", to: "/" },
   { label: "About", to: "/#about" },
   { label: "Alumni", to: "/alumni" },
-  { label: "Gallery", to: "/#gallery" },
-  { label: "Notice", to: "/#notice" },
-  { label: "Contact", to: "/#contact" },
+  { label: "Gallery", to: "/gallery" },
+  { label: "Notice", to: "/notices" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function Navbar({ active, showRegister = true, showLogin = true }) {

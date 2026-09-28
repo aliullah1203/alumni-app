@@ -1,6 +1,9 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Home from "./pages/Home";
+import NoticesPage from "./pages/NoticesPage";
+import GalleryPage from "./pages/GalleryPage";
+import Contact from "./pages/Contact";
 import Register from "./pages/Register";
 import Directory from "./pages/Directory";
 import Profile from "./pages/Profile";
@@ -41,6 +44,9 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/notices" element={<NoticesPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
         <Route path="/alumni" element={<Directory />} />
         <Route path="/alumni/login" element={<AlumniLogin />} />

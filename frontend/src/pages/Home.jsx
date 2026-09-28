@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Users, User, CalendarDays, Heart, Megaphone, Images } from "lucide-react";
+import { Link } from "react-router-dom";
 import PublicLayout from "../components/PublicLayout";
 import Button from "../components/Button";
 import StatItem from "../components/StatItem";
@@ -63,18 +64,18 @@ export default function Home() {
         <div className="container">
           <div className="notices__head">
             <h2>Latest Notice</h2>
-            <a href="#notice" className="link">View All</a>
+            <Link to="/notices" className="link">View All</Link>
           </div>
           {notices.length === 0 && !loading && <p style={{ color: "var(--text-muted)" }}>No notices at this time.</p>}
           {notices.map((n) => (
-            <div className="notice" key={n.id}>
+            <Link to="/notices" key={n.id} className="notice notice--link">
               <Megaphone className="notice__icon" size={26} />
               <div className="notice__body">
                 <h3>{n.title}</h3>
                 <p>{n.text}</p>
               </div>
               <time>{new Date(n.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</time>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -83,17 +84,18 @@ export default function Home() {
         <div className="container">
           <div className="notices__head">
             <h2><Images size={22} style={{ marginRight: 8, verticalAlign: "middle" }} />Photo Gallery</h2>
+            <Link to="/gallery" className="link">View All</Link>
           </div>
           {!loading && gallery.length === 0 && (
             <p style={{ color: "var(--text-muted)" }}>No gallery photos yet.</p>
           )}
           {gallery.length > 0 && (
             <div className="gallery__grid">
-              {gallery.map((item) => (
-                <figure key={item.id} className="gallery__item">
+              {gallery.slice(0, 6).map((item) => (
+                <Link to="/gallery" key={item.id} className="gallery__item gallery__item--link">
                   <img src={item.imageUrl} alt={item.title || "Gallery photo"} loading="lazy" />
-                  {item.title && <figcaption>{item.title}</figcaption>}
-                </figure>
+                  {item.title && <span style={{ display: "block", fontSize: 13, color: "var(--text-muted)", padding: "8px 12px" }}>{item.title}</span>}
+                </Link>
               ))}
             </div>
           )}

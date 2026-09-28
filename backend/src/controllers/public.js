@@ -4,6 +4,8 @@ const { ok, fail } = require("../utils/response");
 const { generateVerifyToken } = require("../utils/token");
 const { saveFile, getFileUrl } = require("../services/storage");
 const { generateAlumniPdf } = require("../services/pdf");
+const { sendEmail, contactEmailHtml } = require("../services/email");
+const { ADMIN_EMAIL } = require("../config/env");
 
 // ── Health ───────────────────────────────────────────────────────────────────
 exports.health = async (req, res) => {
@@ -37,7 +39,7 @@ exports.getStats = async (req, res) => {
 
 // ── Notices ───────────────────────────────────────────────────────────────────
 exports.getNotices = async (req, res) => {
-  const limit = Math.min(parseInt(req.query.limit) || 5, 20);
+  const limit = Math.min(parseInt(req.query.limit) || 5, 100);
   const notices = await prisma.notice.findMany({
     where: { isPublished: true },
     orderBy: { date: "desc" },
@@ -228,6 +230,28 @@ exports.verifyAlumni = async (req, res) => {
     photoUrl: getFileUrl(alumni.photoUrl),
     verifiedAt: alumni.approvedAt,
   });
+};
+
+// ── Contact ───────────────────────────────────────────────────────────────────
+const contactSchema = z.object({
+  name: z.string().min(2).max(100).trim(),
+  email: z.string().email().toLowerCase().trim(),
+  subject: z.string().min(2).max(200).trim(),
+  message: z.string().min(10).max(2000).trim(),
+});
+
+exports.sendContact = async (req, res) => {
+  const data = contactSchema.parse(req.body);
+  try {
+    await sendEmail({
+      to: ADMIN_EMAIL,
+      subject: `[Contact] ${data.subject}`,
+      html: contactEmailHtml(data),
+    });
+  } catch (err) {
+    console.error("Contact email failed:", err.message);
+  }
+  ok(res, null, "Message sent. We will get back to you shortly.");
 };
 
 function defaultContent() {

@@ -6,4 +6,5 @@ export const contentApi = {
   getNotices: (limit = 5) => api.get(`/notices?limit=${limit}`),
   getGallery: () => api.get("/gallery"),
   getFilters: () => api.get("/meta/filters"),
+  sendContact: (data) => api.post("/contact", data),
 };
