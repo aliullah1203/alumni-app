@@ -20,33 +20,47 @@ enum UserRole {
 }
 
 model Alumni {
-  id             String       @id @default(uuid())
-  name           String
-  registrationNo String       @unique
-  email          String       @unique
-  phone          String
-  batch          Int
-  department     String
-  faculty        String
-  address        String
-  about          String       @default("")
-  photoUrl       String?
-  showContact    Boolean      @default(false)
-  socialLinks    Json         @default("{}")
-  status         AlumniStatus @default(PENDING)
-  verifyToken    String       @unique
-  approvedAt     DateTime?
-  approvedById   String?
-  approvedBy     User?        @relation("AlumniApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
-  education      Education[]
-  experience     Experience[]
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id               String       @id @default(uuid())
+  name             String
+  registrationNo   String       @unique
+  email            String       @unique
+  phone            String
+  batch            Int
+  department       String
+  faculty          String
+  address          String
+  about            String       @default("")
+  photoUrl         String?
+  showContact      Boolean      @default(false)
+  socialLinks      Json         @default("{}")
+  status           AlumniStatus @default(PENDING)
+  verifyToken      String       @unique
+  setupToken       String?      @unique
+  setupTokenExpiry DateTime?
+  approvedAt       DateTime?
+  approvedById     String?
+  approvedBy       User?        @relation("AlumniApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  alumniUser       AlumniUser?
+  education        Education[]
+  experience       Experience[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   @@index([status, batch])
   @@index([department])
   @@index([registrationNo])
   @@index([createdAt(sort: Desc)])
+}
+
+model AlumniUser {
+  id               String    @id @default(uuid())
+  alumniId         String    @unique
+  alumni           Alumni    @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+  passwordHash     String
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Education {

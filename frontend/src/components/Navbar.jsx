@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import Button from "./Button";
 import { useAuth } from "../context/AuthContext";
+import { useAlumniAuth } from "../context/AlumniAuthContext";
 
 const LINKS = [
   { label: "Home", to: "/" },
@@ -17,12 +18,11 @@ const LINKS = [
 export default function Navbar({ active, showRegister = true, showLogin = true }) {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { alumniUser, alumniLogout } = useAlumniAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-  };
+  const handleAdminLogout = async () => { await logout(); navigate("/login"); };
+  const handleAlumniLogout = async () => { await alumniLogout(); navigate("/"); };
 
   return (
     <header className="navbar">
@@ -40,11 +40,16 @@ export default function Navbar({ active, showRegister = true, showLogin = true }
           {user ? (
             <>
               <NavLink to="/admin" className="navbar__login">Dashboard</NavLink>
-              <Button size="sm" variant="outline" onClick={handleLogout}>Logout</Button>
+              <Button size="sm" variant="outline" onClick={handleAdminLogout}>Logout</Button>
+            </>
+          ) : alumniUser ? (
+            <>
+              <NavLink to={`/alumni/${alumniUser.registrationNo}`} className="navbar__login">My Profile</NavLink>
+              <Button size="sm" variant="outline" onClick={handleAlumniLogout}>Logout</Button>
             </>
           ) : (
             <>
-              {showLogin && <NavLink to="/login" className="navbar__login">Login</NavLink>}
+              {showLogin && <NavLink to="/alumni/login" className="navbar__login">Alumni Login</NavLink>}
               {showRegister && <Button to="/register" size="sm">Register</Button>}
             </>
           )}

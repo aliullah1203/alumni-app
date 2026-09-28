@@ -16,6 +16,7 @@ export const adminApi = {
   updateAlumni: (id, fd) => fetch(`/api${A}/alumni/${id}`, { method: "PUT", body: fd, credentials: "include" }).then(parseJson),
   deleteAlumni: (id) => api.delete(`${A}/alumni/${id}`),
   patchStatus: (id, status) => api.patch(`${A}/alumni/${id}/status`, { status }),
+  resendSetup: (id) => api.post(`${A}/alumni/${id}/resend-setup`),
 
   // Notices
   listNotices: () => api.get(`${A}/notices`),

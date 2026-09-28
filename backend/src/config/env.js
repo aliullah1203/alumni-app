@@ -21,4 +21,10 @@ module.exports = {
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || "admin@uits.edu.bd",
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "Admin@1234",
   isProd: process.env.NODE_ENV === "production",
+  // SMTP (optional — console logs if not set)
+  SMTP_HOST: process.env.SMTP_HOST || "",
+  SMTP_PORT: process.env.SMTP_PORT || "587",
+  SMTP_USER: process.env.SMTP_USER || "",
+  SMTP_PASS: process.env.SMTP_PASS || "",
+  FROM_EMAIL: process.env.FROM_EMAIL || '"UITS Alumni Association" <noreply@uits.edu.bd>',
 };

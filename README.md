@@ -56,7 +56,7 @@ npm install --prefix client
 npm install --prefix server
 
 # Generate Prisma client
-cd server && npx prisma generate
+cd backend && npx prisma generate
 
 # Run migrations (uses DIRECT_URL)
 npx prisma migrate deploy   # production / CI
@@ -112,7 +112,7 @@ Point your web server / platform at `client/dist` for the SPA and `server/` for 
 | GET | /api/alumni/:registrationNo/pdf | Server-generated PDF download |
 | GET | /api/verify/:verifyToken | Verify alumni by QR token |
 
-### Auth
+### Admin Auth
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -121,6 +121,21 @@ Point your web server / platform at `client/dist` for the SPA and `server/` for 
 | GET | /api/auth/me | Current user |
 | POST | /api/auth/change-password | Change password (forced on first login) |
 
+### Alumni Auth
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/alumni-auth/setup?token= | Validate account-setup link |
+| POST | /api/alumni-auth/setup | Complete setup (set password, auto-login) |
+| POST | /api/alumni-auth/login | Alumni login (rate-limited 10/min) |
+| POST | /api/alumni-auth/logout | Clear cookie |
+| GET | /api/alumni-auth/me | Current alumni user |
+| POST | /api/alumni-auth/forgot-password | Send password reset email |
+| GET | /api/alumni-auth/reset?token= | Validate reset token |
+| POST | /api/alumni-auth/reset-password | Reset password via token |
+| PUT | /api/alumni-auth/profile | Update own profile (auth required) |
+| PUT | /api/alumni-auth/password | Change own password (auth required) |
+
 ### Admin (auth required)
 
 | Method | Path | Description |
@@ -128,7 +143,8 @@ Point your web server / platform at `client/dist` for the SPA and `server/` for 
 | GET | /api/admin/dashboard | Stats + recent registrations |
 | GET/POST | /api/admin/alumni | List (search/status/page) / Create |
 | GET/PUT/DELETE | /api/admin/alumni/:id | Get / Update / Delete |
-| PATCH | /api/admin/alumni/:id/status | Approve or Reject |
+| PATCH | /api/admin/alumni/:id/status | Approve or Reject (sends setup email on approve) |
+| POST | /api/admin/alumni/:id/resend-setup | Resend setup email (if not yet set up) |
 | GET/POST | /api/admin/notices | List / Create |
 | PUT/DELETE | /api/admin/notices/:id | Update / Delete |
 | GET/POST | /api/admin/gallery | List / Upload |
@@ -163,14 +179,14 @@ Tests cover: login, register (valid/invalid/duplicate), approval flow, directory
 - [ ] Neon backups enabled (point-in-time restore)
 - [ ] `prisma migrate deploy` (not `migrate dev`) in CI/CD
 - [ ] Rate limits reviewed for production traffic
-- [ ] Email verification for new alumni registrations (not yet implemented — see Unfinished Items)
+- [ ] `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` configured so approval emails actually deliver
 - [ ] Neon compute auto-suspend: first query after idle may be slow; retry logic in `server/src/config/prisma.js` handles this
 
 ---
 
 ## 9. Unfinished Items / Assumptions
 
-- **Email verification** for new alumni registrations (post-registration email with approval link) — not yet wired; SMTP transport needs to be added.
+- **Email delivery in production** — configure `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` in env; without these, emails are logged to the console (useful for local dev).
 - **Gallery admin UI** in the client shows a simple grid; advanced reordering not implemented.
 - **Cloudinary / S3 driver** — interface is stubbed in `server/src/services/storage.js`; install `cloudinary` npm package and uncomment the driver code.
 - **About / Gallery / Notice / Contact sections on the homepage** — the navbar hash links exist but the page only scrolls to the `#notice` section. Full sections need content management wiring.

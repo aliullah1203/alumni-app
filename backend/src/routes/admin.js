@@ -17,6 +17,7 @@ router.get("/alumni/:id", wrap(ctrl.getAlumni));
 router.put("/alumni/:id", upload.single("photo"), verifyMagicBytes, wrap(ctrl.updateAlumni));
 router.delete("/alumni/:id", wrap(ctrl.deleteAlumni));
 router.patch("/alumni/:id/status", wrap(ctrl.patchStatus));
+router.post("/alumni/:id/resend-setup", wrap(ctrl.resendSetup));
 
 // Notices
 router.get("/notices", wrap(ctrl.listNotices));

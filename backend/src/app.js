@@ -31,6 +31,7 @@ app.use("/uploads", express.static(path.resolve(UPLOAD_DIR)));
 // Routes
 app.use("/api", require("./routes/public"));
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/alumni-auth", require("./routes/alumniAuth"));
 app.use("/api/admin", require("./routes/admin"));
 
 // 404

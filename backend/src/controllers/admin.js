@@ -1,9 +1,35 @@
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const { z } = require("zod");
 const { prisma } = require("../config/prisma");
 const { ok, fail } = require("../utils/response");
 const { generateVerifyToken } = require("../utils/token");
 const { saveFile, deleteFile, getFileUrl } = require("../services/storage");
+const { sendEmail, setupEmailHtml } = require("../services/email");
+const { PUBLIC_URL } = require("../config/env");
+
+const SETUP_TTL_MS = 72 * 60 * 60 * 1000;
+
+function generateSetupToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+async function sendSetupEmail(alumni) {
+  const setupToken = generateSetupToken();
+  const setupTokenExpiry = new Date(Date.now() + SETUP_TTL_MS);
+
+  await prisma.alumni.update({
+    where: { id: alumni.id },
+    data: { setupToken, setupTokenExpiry },
+  });
+
+  const setupUrl = `${PUBLIC_URL}/alumni/setup-password?token=${setupToken}`;
+  await sendEmail({
+    to: alumni.email,
+    subject: "UITS Alumni — Set up your account",
+    html: setupEmailHtml(alumni.name, setupUrl),
+  });
+}
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 exports.getDashboard = async (req, res) => {
@@ -56,6 +82,7 @@ exports.listAlumni = async (req, res) => {
       select: {
         id: true, name: true, registrationNo: true, email: true,
         batch: true, department: true, status: true, createdAt: true, photoUrl: true,
+        alumniUser: { select: { id: true } },
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
@@ -63,7 +90,7 @@ exports.listAlumni = async (req, res) => {
     }),
   ]);
 
-  ok(res, alumni.map((a) => ({ ...a, photoUrl: getFileUrl(a.photoUrl) })), "OK",
+  ok(res, alumni.map((a) => ({ ...a, photoUrl: getFileUrl(a.photoUrl), hasAccount: !!a.alumniUser })), "OK",
     { page, limit, total, totalPages: Math.ceil(total / limit) });
 };
 
@@ -156,8 +183,16 @@ exports.patchStatus = async (req, res) => {
           approvedById: req.user.id,
           verifyToken: existing.verifyToken || generateVerifyToken(),
         },
+        include: { alumniUser: { select: { id: true } } },
       });
     });
+
+    // Send setup email only if AlumniUser doesn't exist yet
+    if (!alumni.alumniUser) {
+      try { await sendSetupEmail(alumni); } catch (err) {
+        console.error("Failed to send setup email:", err.message);
+      }
+    }
   } else {
     alumni = await prisma.alumni.update({
       where: { id: req.params.id },
@@ -165,6 +200,26 @@ exports.patchStatus = async (req, res) => {
     });
   }
   ok(res, alumni);
+};
+
+exports.resendSetup = async (req, res) => {
+  const alumni = await prisma.alumni.findUnique({
+    where: { id: req.params.id },
+    include: { alumniUser: { select: { id: true } } },
+  });
+
+  if (!alumni) return fail(res, "Alumni not found", 404);
+  if (alumni.status !== "APPROVED") return fail(res, "Alumni is not approved", 400);
+  if (alumni.alumniUser) return fail(res, "Alumni has already set up their account", 400);
+
+  try {
+    await sendSetupEmail(alumni);
+  } catch (err) {
+    console.error("Failed to send setup email:", err.message);
+    return fail(res, "Failed to send email. Check SMTP configuration.", 500);
+  }
+
+  ok(res, null, "Setup email sent");
 };
 
 // ── Notices ────────────────────────────────────────────────────────────────────

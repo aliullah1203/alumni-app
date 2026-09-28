@@ -12,14 +12,17 @@ import "./styles/admin.css";
 import App from "./App";
 import { ContentProvider } from "./context/ContentContext";
 import { AuthProvider } from "./context/AuthContext";
+import { AlumniAuthProvider } from "./context/AlumniAuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <ContentProvider>
-          <App />
-        </ContentProvider>
+        <AlumniAuthProvider>
+          <ContentProvider>
+            <App />
+          </ContentProvider>
+        </AlumniAuthProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

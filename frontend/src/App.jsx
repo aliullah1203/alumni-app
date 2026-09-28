@@ -16,6 +16,10 @@ import AdminGallery from "./pages/admin/Gallery";
 import AdminUsers from "./pages/admin/Users";
 import AdminSettings from "./pages/admin/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AlumniLogin from "./pages/alumni/Login";
+import SetupPassword from "./pages/alumni/SetupPassword";
+import ForgotPassword from "./pages/alumni/ForgotPassword";
+import ResetPassword from "./pages/alumni/ResetPassword";
 
 function ScrollManager() {
   const { pathname, hash } = useLocation();
@@ -39,6 +43,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/alumni" element={<Directory />} />
+        <Route path="/alumni/login" element={<AlumniLogin />} />
+        <Route path="/alumni/setup-password" element={<SetupPassword />} />
+        <Route path="/alumni/forgot-password" element={<ForgotPassword />} />
+        <Route path="/alumni/reset-password" element={<ResetPassword />} />
         <Route path="/alumni/:id" element={<Profile />} />
         <Route path="/alumni/:id/pdf" element={<PdfView />} />
         <Route path="/verify/:id" element={<Verify />} />

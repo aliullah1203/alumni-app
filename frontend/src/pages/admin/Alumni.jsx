@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Check, X, Trash2, Eye } from "lucide-react";
+import { Search, Check, X, Trash2, Eye, MailCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../components/AdminLayout";
 import Badge from "../../components/Badge";
@@ -39,6 +39,13 @@ export default function AdminAlumni() {
     catch (e) { alert(e.message); }
   };
 
+  const resendSetup = async (id, name) => {
+    setUpdating(id);
+    try { await adminApi.resendSetup(id); alert(`Setup email resent to ${name}.`); }
+    catch (e) { alert(e.message); }
+    finally { setUpdating(null); }
+  };
+
   return (
     <AdminLayout>
       <h1 className="admin__title">Alumni Management</h1>
@@ -76,9 +83,12 @@ export default function AdminAlumni() {
                           <button className="btn btn--sm" style={{ background: "#16a663", padding: "0 10px" }} disabled={updating === a.id} onClick={() => patchStatus(a.id, "APPROVED")}><Check size={13} /></button>
                           <button className="btn btn--sm btn--danger" style={{ padding: "0 10px" }} disabled={updating === a.id} onClick={() => patchStatus(a.id, "REJECTED")}><X size={13} /></button>
                         </>}
-                        {a.status === "APPROVED" && (
+                        {a.status === "APPROVED" && (<>
+                          {!a.hasAccount && (
+                            <button className="btn btn--sm" style={{ background: "#0ea5e9", padding: "0 10px" }} title="Resend setup email" disabled={updating === a.id} onClick={() => resendSetup(a.id, a.name)}><MailCheck size={13} /></button>
+                          )}
                           <button className="btn btn--sm btn--danger" style={{ padding: "0 10px" }} disabled={updating === a.id} onClick={() => patchStatus(a.id, "REJECTED")}><X size={13} /></button>
-                        )}
+                        </>)}
                         <button className="btn btn--sm btn--danger" style={{ padding: "0 10px" }} onClick={() => del(a.id, a.name)}><Trash2 size={13} /></button>
                       </span>
                     </td>
