@@ -17,6 +17,7 @@ const localDriver = {
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   },
   getUrl(key) {
+    if (key.startsWith("http://") || key.startsWith("https://")) return key;
     return `${PUBLIC_URL}/uploads/${key}`;
   },
 };

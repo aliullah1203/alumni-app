@@ -123,8 +123,7 @@ exports.createAlumni = async (req, res) => {
   );
   let photoUrl = null;
   if (req.file) {
-    const key = await saveFile(req.file);
-    photoUrl = getFileUrl(key);
+    photoUrl = await saveFile(req.file);
   }
   const alumni = await prisma.alumni.create({
     data: { ...data, photoUrl, verifyToken: generateVerifyToken() },
@@ -143,10 +142,9 @@ exports.updateAlumni = async (req, res) => {
   let photoUrl = existing.photoUrl;
   if (req.file) {
     if (existing.photoUrl) {
-      try { await deleteFile(new URL(existing.photoUrl).pathname.split("/uploads/")[1]); } catch {}
+      try { await deleteFile(existing.photoUrl.split("/uploads/").pop()); } catch {}
     }
-    const key = await saveFile(req.file);
-    photoUrl = getFileUrl(key);
+    photoUrl = await saveFile(req.file);
   }
 
   const alumni = await prisma.alumni.update({

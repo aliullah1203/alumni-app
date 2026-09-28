@@ -97,8 +97,7 @@ exports.registerAlumni = async (req, res) => {
 
   let photoUrl = null;
   if (req.file) {
-    const key = await saveFile(req.file);
-    photoUrl = getFileUrl(key);
+    photoUrl = await saveFile(req.file);
   }
 
   const alumni = await prisma.alumni.create({
