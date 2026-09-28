@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Home from "./pages/Home";
 import NoticesPage from "./pages/NoticesPage";
 import GalleryPage from "./pages/GalleryPage";
+import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Register from "./pages/Register";
 import Directory from "./pages/Directory";
@@ -44,6 +45,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/notices" element={<NoticesPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/contact" element={<Contact />} />

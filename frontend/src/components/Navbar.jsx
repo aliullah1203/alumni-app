@@ -8,7 +8,7 @@ import { useAlumniAuth } from "../context/AlumniAuthContext";
 
 const LINKS = [
   { label: "Home", to: "/" },
-  { label: "About", to: "/#about" },
+  { label: "About", to: "/about" },
   { label: "Alumni", to: "/alumni" },
   { label: "Gallery", to: "/gallery" },
   { label: "Notice", to: "/notices" },
