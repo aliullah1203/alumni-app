@@ -77,38 +77,6 @@ async function main() {
     update: {},
   });
 
-  // PLACEHOLDER: sample alumni — not real UITS students
-  const sampleAlumni = [
-    { name: "Md. Rahman",     registrationNo: "2016-001", email: "rahman@example.com",   phone: "01712-345678", batch: 2016, department: "Computer Science & Engineering",       faculty: "Faculty of Science & Engineering",          address: "Dhaka, Bangladesh", status: "APPROVED" },
-    { name: "Fatima Akter",   registrationNo: "2018-027", email: "fatima@example.com",   phone: "01812-345679", batch: 2018, department: "Business Administration",               faculty: "Faculty of Business",                        address: "Chittagong, Bangladesh", status: "APPROVED" },
-    { name: "Sabbir Ahmed",   registrationNo: "2019-023", email: "sabbir@example.com",   phone: "01712-345680", batch: 2019, department: "Electrical & Electronic Engineering",   faculty: "Faculty of Science & Engineering",          address: "Sylhet, Bangladesh", status: "APPROVED" },
-    { name: "Nusrat Jahan",   registrationNo: "2018-045", email: "nusrat@example.com",   phone: "01912-345681", batch: 2018, department: "Computer Science & Engineering",       faculty: "Faculty of Science & Engineering",          address: "Dhaka, Bangladesh", status: "APPROVED" },
-    { name: "Tanzim Hasan",   registrationNo: "2020-012", email: "tanzim@example.com",   phone: "01712-345682", batch: 2020, department: "Information Technology",               faculty: "Faculty of Science & Engineering",          address: "Rajshahi, Bangladesh", status: "APPROVED" },
-    { name: "Shakib Rahman",  registrationNo: "2020-030", email: "shakib@example.com",   phone: "01612-345683", batch: 2020, department: "Civil Engineering",                   faculty: "Faculty of Science & Engineering",          address: "Dhaka, Bangladesh", status: "APPROVED" },
-    { name: "Rahim Uddin",    registrationNo: "2022-055", email: "rahim@example.com",    phone: "01512-345684", batch: 2022, department: "Computer Science & Engineering",       faculty: "Faculty of Science & Engineering",          address: "Dhaka, Bangladesh", status: "PENDING" },
-  ];
-
-  for (const a of sampleAlumni) {
-    await prisma.alumni.upsert({
-      where: { registrationNo: a.registrationNo },
-      create: { ...a, about: "Sample alumni profile.", verifyToken: token(), approvedAt: a.status === "APPROVED" ? new Date() : null },
-      update: {},
-    });
-  }
-
-  // PLACEHOLDER: sample notices
-  await prisma.notice.upsert({
-    where: { id: "notice-001" },
-    create: {
-      id: "notice-001",
-      title: "Annual Alumni Reunion 2025",
-      text: "UITS Alumni Association cordially invites all alumni to the Annual Reunion 2025. Reconnect with your batchmates and celebrate our shared journey.",
-      date: new Date("2025-04-15"),
-      isPublished: true,
-    },
-    update: {},
-  });
-
   console.log("Seed complete.");
 }
 

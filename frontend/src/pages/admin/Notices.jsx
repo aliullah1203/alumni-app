@@ -15,7 +15,7 @@ export default function AdminNotices() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  const load = () => adminApi.listNotices().then((r) => setNotices(r.data)).catch(() => {}).finally(() => setLoading(false));
+  const load = () => { adminApi.listNotices().then((r) => setNotices(r.data)).catch(() => {}).finally(() => setLoading(false)); };
   useEffect(load, []);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value });

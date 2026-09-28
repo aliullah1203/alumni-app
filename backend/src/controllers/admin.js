@@ -108,7 +108,7 @@ const alumniBodySchema = z.object({
   registrationNo: z.string().regex(/^\d{4}-\d{3,4}$/).trim(),
   email: z.string().email().toLowerCase().trim(),
   phone: z.string().min(7).max(20).trim(),
-  batch: z.coerce.number().int().min(2003).max(new Date().getFullYear()),
+  batch: z.coerce.number().int().min(1).max(200),
   department: z.string().min(2).max(100).trim(),
   faculty: z.string().min(2).max(100).trim(),
   address: z.string().min(5).max(500).trim(),

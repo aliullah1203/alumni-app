@@ -73,7 +73,7 @@ export default function Directory() {
           <Button className="filters__btn" size="lg" style={{ height: 46 }}>Search</Button>
           <select className={`control${batch ? "" : " is-empty"}`} value={batch} onChange={(e) => setParam("batch", e.target.value)} aria-label="Batch">
             <option value="">All Batches</option>
-            {filters.batches.map((b) => <option key={b} value={b}>{b}</option>)}
+            {filters.batches.map((b) => <option key={b} value={b}>Batch {b}</option>)}
           </select>
           <select className={`control${dept ? "" : " is-empty"}`} value={dept} onChange={(e) => setParam("department", e.target.value)} aria-label="Department">
             <option value="">All Departments</option>

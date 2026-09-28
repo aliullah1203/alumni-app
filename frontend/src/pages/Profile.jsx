@@ -104,7 +104,7 @@ export default function Profile() {
 
   const rows = [
     [Contact,      "Registration No", alumni.registrationNo],
-    [CalendarDays, "Batch",           String(alumni.batch)],
+    [CalendarDays, "Batch",           `Batch ${alumni.batch}`],
     [Building2,    "Department",      alumni.department],
     [BookOpen,     "Faculty",         alumni.faculty],
     ...(alumni.email   ? [[Mail,  "Email",   alumni.email]]   : []),

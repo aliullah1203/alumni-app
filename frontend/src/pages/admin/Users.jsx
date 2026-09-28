@@ -17,7 +17,7 @@ export default function AdminUsers() {
   const [error, setError] = useState(null);
   const { user: me } = useAuth();
 
-  const load = () => adminApi.listUsers().then((r) => setUsers(r.data)).catch(() => {}).finally(() => setLoading(false));
+  const load = () => { adminApi.listUsers().then((r) => setUsers(r.data)).catch(() => {}).finally(() => setLoading(false)); };
   useEffect(load, []);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });

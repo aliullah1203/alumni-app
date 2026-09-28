@@ -90,7 +90,7 @@ export default function Register() {
             <FormField label="Batch" required>
               <select className={`control${form.batch ? "" : " is-empty"}`} required value={form.batch} onChange={set("batch")}>
                 <option value="">Select your batch</option>
-                {BATCH_YEARS.map((b) => <option key={b}>{b}</option>)}
+                {BATCH_YEARS.map((b) => <option key={b} value={b}>Batch {b}</option>)}
               </select>
             </FormField>
             <FormField label="Department" required>

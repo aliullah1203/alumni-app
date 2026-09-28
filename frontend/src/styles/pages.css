@@ -13,7 +13,12 @@
 .stat__icon { color: var(--blue); flex: none; }
 .stat__value { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1.15; }
 .stat__label { font-size: 14px; color: var(--text-muted); }
-.notices { background: #fff; padding: 30px 0 90px; }
+.notices { background: #fff; padding: 30px 0 54px; }
+.gallery-section { background: #f5f7fb; padding: 30px 0 54px; }
+.gallery__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 8px; }
+.gallery__item { margin: 0; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.gallery__item img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.gallery__item figcaption { font-size: 13px; color: var(--text-muted); padding: 8px 12px; }
 .notices__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .notices__head h2 { font-size: 20px; font-weight: 700; color: var(--navy); }
 .notices__head .link { font-size: 14px; }

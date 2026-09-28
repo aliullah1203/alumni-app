@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { Users, User, CalendarDays, Heart, Megaphone } from "lucide-react";
+import { Users, User, CalendarDays, Heart, Megaphone, Images } from "lucide-react";
 import PublicLayout from "../components/PublicLayout";
 import Button from "../components/Button";
 import StatItem from "../components/StatItem";
@@ -12,11 +12,12 @@ export default function Home() {
   const { content } = useContent();
   const [stats, setStats] = useState(null);
   const [notices, setNotices] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([contentApi.getStats(), contentApi.getNotices(3)])
-      .then(([s, n]) => { setStats(s.data); setNotices(n.data || []); })
+    Promise.all([contentApi.getStats(), contentApi.getNotices(3), contentApi.getGallery()])
+      .then(([s, n, g]) => { setStats(s.data); setNotices(n.data || []); setGallery(g.data || []); })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -75,6 +76,27 @@ export default function Home() {
               <time>{new Date(n.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</time>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="gallery-section" id="gallery">
+        <div className="container">
+          <div className="notices__head">
+            <h2><Images size={22} style={{ marginRight: 8, verticalAlign: "middle" }} />Photo Gallery</h2>
+          </div>
+          {!loading && gallery.length === 0 && (
+            <p style={{ color: "var(--text-muted)" }}>No gallery photos yet.</p>
+          )}
+          {gallery.length > 0 && (
+            <div className="gallery__grid">
+              {gallery.map((item) => (
+                <figure key={item.id} className="gallery__item">
+                  <img src={item.imageUrl} alt={item.title || "Gallery photo"} loading="lazy" />
+                  {item.title && <figcaption>{item.title}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </PublicLayout>

@@ -15,7 +15,7 @@ export default function AdminGallery() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  const load = () => adminApi.listGallery().then((r) => setItems(r.data)).catch(() => {}).finally(() => setLoading(false));
+  const load = () => { adminApi.listGallery().then((r) => setItems(r.data)).catch(() => {}).finally(() => setLoading(false)); };
   useEffect(load, []);
 
   const handleFile = (e) => {
