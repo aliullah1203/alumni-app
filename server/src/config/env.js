@@ -1,0 +1,24 @@
+require("dotenv").config();
+
+const required = ["DATABASE_URL", "DIRECT_URL", "JWT_SECRET"];
+const missing = required.filter((k) => !process.env[k]);
+if (missing.length) {
+  console.error(`Missing required env vars: ${missing.join(", ")}`);
+  process.exit(1);
+}
+
+module.exports = {
+  PORT: parseInt(process.env.PORT || "5000", 10),
+  NODE_ENV: process.env.NODE_ENV || "development",
+  DATABASE_URL: process.env.DATABASE_URL,
+  DIRECT_URL: process.env.DIRECT_URL,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
+  CLIENT_URL: process.env.CLIENT_URL || "http://localhost:5173",
+  PUBLIC_URL: process.env.PUBLIC_URL || "http://localhost:5173",
+  STORAGE_DRIVER: process.env.STORAGE_DRIVER || "local",
+  UPLOAD_DIR: process.env.UPLOAD_DIR || "./uploads",
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || "admin@uits.edu.bd",
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "Admin@1234",
+  isProd: process.env.NODE_ENV === "production",
+};
