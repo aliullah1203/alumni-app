@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import AdminLayout from "../components/AdminLayout";
-import Button from "../components/Button";
-import FormField from "../components/FormField";
-import { adminApi } from "../api/admin";
+import AdminLayout from "../../components/AdminLayout";
+import Button from "../../components/Button";
+import FormField from "../../components/FormField";
+import { adminApi } from "../../api/admin";
 
 const DEFAULT = { siteName: "UITS Alumni Association", tagline: "Future will be better than the past", registrationOpen: true };
 

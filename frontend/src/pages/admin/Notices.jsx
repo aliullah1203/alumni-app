@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import AdminLayout from "../components/AdminLayout";
-import Button from "../components/Button";
-import FormField from "../components/FormField";
-import { adminApi } from "../api/admin";
+import AdminLayout from "../../components/AdminLayout";
+import Button from "../../components/Button";
+import FormField from "../../components/FormField";
+import { adminApi } from "../../api/admin";
 
 const EMPTY = { title: "", text: "", isPublished: true };
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Trash2, UserCheck, UserX } from "lucide-react";
-import AdminLayout from "../components/AdminLayout";
-import Button from "../components/Button";
-import FormField from "../components/FormField";
-import Badge from "../components/Badge";
-import { adminApi } from "../api/admin";
-import { useAuth } from "../context/AuthContext";
+import AdminLayout from "../../components/AdminLayout";
+import Button from "../../components/Button";
+import FormField from "../../components/FormField";
+import Badge from "../../components/Badge";
+import { adminApi } from "../../api/admin";
+import { useAuth } from "../../context/AuthContext";
 
 const EMPTY = { name: "", email: "", password: "", role: "EDITOR" };
 

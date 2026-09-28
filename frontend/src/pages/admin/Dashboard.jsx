@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Users, ClipboardList, LayoutGrid, Eye, FileText, Check, X } from "lucide-react";
-import AdminLayout from "../components/AdminLayout";
-import Badge from "../components/Badge";
-import Button from "../components/Button";
-import { adminApi } from "../api/admin";
+import AdminLayout from "../../components/AdminLayout";
+import Badge from "../../components/Badge";
+import Button from "../../components/Button";
+import { adminApi } from "../../api/admin";
 
 export default function AdminDashboard() {
   const [data, setData] = useState(null);

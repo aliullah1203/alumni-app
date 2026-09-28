@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import AdminLayout from "../components/AdminLayout";
-import Button from "../components/Button";
-import { adminApi } from "../api/admin";
-import { SITE } from "../data/site.js";
+import AdminLayout from "../../components/AdminLayout";
+import Button from "../../components/Button";
+import { adminApi } from "../../api/admin";
+import { SITE } from "../../data/site.js";
 
 const TABS = ["Homepage", "About Us", "Notice", "Gallery", "Contact", "Footer"];
 

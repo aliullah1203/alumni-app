@@ -6,15 +6,15 @@ import Directory from "./pages/Directory";
 import Profile from "./pages/Profile";
 import PdfView from "./pages/PdfView";
 import Verify from "./pages/Verify";
-import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminContent from "./pages/AdminContent";
-import AdminAlumni from "./pages/AdminAlumni";
-import AdminNotices from "./pages/AdminNotices";
-import AdminGallery from "./pages/AdminGallery";
-import AdminUsers from "./pages/AdminUsers";
-import AdminSettings from "./pages/AdminSettings";
-import ChangePassword from "./pages/ChangePassword";
+import Login from "./pages/admin/Login";
+import ChangePassword from "./pages/admin/ChangePassword";
+import Dashboard from "./pages/admin/Dashboard";
+import AdminContent from "./pages/admin/Content";
+import AdminAlumni from "./pages/admin/Alumni";
+import AdminNotices from "./pages/admin/Notices";
+import AdminGallery from "./pages/admin/Gallery";
+import AdminUsers from "./pages/admin/Users";
+import AdminSettings from "./pages/admin/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function ScrollManager() {
@@ -45,7 +45,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Admin — protected */}
-        <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
+        <Route path="/admin" element={<AdminGuard><Dashboard /></AdminGuard>} />
         <Route path="/admin/change-password" element={<AdminGuard><ChangePassword /></AdminGuard>} />
         <Route path="/admin/alumni" element={<AdminGuard><AdminAlumni /></AdminGuard>} />
         <Route path="/admin/content" element={<AdminGuard><AdminContent /></AdminGuard>} />

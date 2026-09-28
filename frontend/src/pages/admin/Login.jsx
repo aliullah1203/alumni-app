@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { LogIn } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import Logo from "../components/Logo";
-import FormField from "../components/FormField";
-import Button from "../components/Button";
+import { useAuth } from "../../context/AuthContext";
+import Logo from "../../components/Logo";
+import FormField from "../../components/FormField";
+import Button from "../../components/Button";
 
 export default function Login() {
   const [email, setEmail] = useState("");

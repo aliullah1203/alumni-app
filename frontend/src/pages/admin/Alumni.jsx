@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Search, Check, X, Trash2, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-import AdminLayout from "../components/AdminLayout";
-import Badge from "../components/Badge";
-import Button from "../components/Button";
-import { adminApi } from "../api/admin";
+import AdminLayout from "../../components/AdminLayout";
+import Badge from "../../components/Badge";
+import Button from "../../components/Button";
+import { adminApi } from "../../api/admin";
 
 const STATUS_LABEL = { APPROVED: "Approved", REJECTED: "Rejected", PENDING: "Pending" };
 

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { KeyRound } from "lucide-react";
-import { authApi } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
-import Logo from "../components/Logo";
-import FormField from "../components/FormField";
-import Button from "../components/Button";
+import { authApi } from "../../api/auth";
+import { useAuth } from "../../context/AuthContext";
+import Logo from "../../components/Logo";
+import FormField from "../../components/FormField";
+import Button from "../../components/Button";
 
 export default function ChangePassword() {
   const [current, setCurrent] = useState("");
